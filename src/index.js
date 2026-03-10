@@ -5,7 +5,6 @@ const corse = require('cors');
 
 const { connectDatabase } = require('./config/database.config');
 const { config } = require('./config/app.config');
-const {init} = require('./utils/prediction.js');
 
 const { errorHandler } = require('./middlewares/errorHandler');
 const { isAuthenticated} = require('./middlewares/authenticated.js');
@@ -82,7 +81,7 @@ app.use(`${baseUrl}/task`, isAuthenticated, taskRouter);
 // Global Error Handler Middleware
 app.use(errorHandler);
 
-init().then(app.listen(config.PORT, async () => {
+app.listen(config.PORT, async () => {
   console.log(`Server is running on port ${config.PORT} in ${config.NODE_ENV} mode.`);
   await connectDatabase();
-}));
+});

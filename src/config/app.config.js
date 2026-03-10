@@ -3,7 +3,8 @@ const appConfig = {
       PORT: process.env.PORT || 3000,
       BASE_PATH: process.env.BASE_PATH || '/api/v1',
       MONGODB_URI: process.env.MONGODB_URI,
-      
+      MODEL_ENDPOINT: process.env.MODEL_ENDPOINT,
+
       SESSION_SECRET: process.env.SESSION_SECRET,
       SESSION_EXPIRES_IN_HOURES: process.env.SESSION_EXPIRES_IN_HOURES,
 
