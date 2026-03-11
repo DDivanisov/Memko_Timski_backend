@@ -1,7 +1,8 @@
 const express = require('express');
 const session = require('express-session');
+const {MongoStore} = require('connect-mongo');
 const passport = require('passport');
-const corse = require('cors');
+const cors = require('cors');
 
 const { connectDatabase } = require('./config/database.config');
 const { config } = require('./config/app.config');
@@ -22,35 +23,38 @@ require('./config/passport.config.js');
 
 const app = express();
 
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
-
 app.use(
-    session({
-      secret: config.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie:{
-        maxAge: parseInt(config.SESSION_EXPIRES_IN_HOURES) * 1000 * 60 * 60,
-        secure: false,
-        httpOnly: true,
-        sameSite: 'lax',
-      },
-    })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-app.use(
-    corse({
+    cors({
         origin: config.FRONTEND_ORIGIN,
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
     })
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: config.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: config.MONGODB_URI,
+      ttl: 14 * 24 * 60 * 60
+    }),
+    cookie: {
+      maxAge: parseInt(config.SESSION_EXPIRES_IN_HOURES) * 1000 * 60 * 60,
+      secure: config.NODE_ENV.toLowerCase() === 'production',
+      httpOnly: true,
+      sameSite: config.NODE_ENV.toLowerCase() === 'production' ? 'none' : 'lax',
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
    
 const baseUrl = config.BASE_PATH;
 
@@ -81,7 +85,12 @@ app.use(`${baseUrl}/task`, isAuthenticated, taskRouter);
 // Global Error Handler Middleware
 app.use(errorHandler);
 
-app.listen(config.PORT, async () => {
+connectDatabase().catch(err => console.error('DB Connection Error:', err));
+
+if (config.NODE_ENV.toLowerCase() !== 'production') {
+  app.listen(config.PORT, async () => {
   console.log(`Server is running on port ${config.PORT} in ${config.NODE_ENV} mode.`);
-  await connectDatabase();
 });
+}
+
+module.exports = app;
