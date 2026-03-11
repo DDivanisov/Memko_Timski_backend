@@ -3,6 +3,7 @@ const { config } = require('./app.config');
 const { loginOrCreateAccountService, loginService } = require('../services/auth');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
 const { Strategy: LocalStrategy } = require('passport-local');
+const { UserModel } = require('../models/user.js');
 
 const {AppError} = require('../utils/appError.js');
 
@@ -60,9 +61,14 @@ passport.use(
   ));
 
 passport.serializeUser((user, done) => {
-  done(null, user);
-});
+  done(null, user._id)
+})
 
-passport.deserializeUser((obj, done) => {
-  done(null, obj);
-});
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await UserModel.findById(id)
+    done(null, user)
+  } catch(err) {
+    done(err, null)
+  }
+})
