@@ -16,7 +16,7 @@ const WorkspaceSchema = new mongoose.Schema({
       },
 });
 
-WorkspaceSchema.methods.resetInviteCode = function() {
+WorkspaceSchema.methods.resetInviteCode = async function() {
       this.inviteCode = generateInviteCode();
 }
 

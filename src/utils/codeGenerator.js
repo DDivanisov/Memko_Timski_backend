@@ -1,12 +1,11 @@
-const uuid = require('uuid');
-
+const { randomUUID } = require('crypto');
 
 function generateInviteCode() {
-    return uuid.v4().replace(/-/g, '').slice(0, 8);
+  return randomUUID().replace(/-/g, '').slice(0, 8);
 }
 
 function generateTaskCode() {
-    return `Task - ${uuid.v4().replace(/-/g, '').slice(0, 3)}`;
+  return `Task - ${randomUUID().replace(/-/g, '').slice(0, 3)}`;
 }
 
 module.exports = { generateInviteCode, generateTaskCode };
