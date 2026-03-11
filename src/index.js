@@ -60,7 +60,7 @@ app.use(passport.session());
    
 const baseUrl = config.BASE_PATH;
 
-app.get(`/${baseUrl}/ping`, async (req, res) => {
+app.get(`${baseUrl}/ping`, async (req, res) => {
   
   res.status(httpStatus.OK).json({
       message: 'Server is up and running!',
@@ -68,7 +68,7 @@ app.get(`/${baseUrl}/ping`, async (req, res) => {
   );
 });
 
-app.get(`/${baseUrl}/`, async (req, res) => {
+app.get(`${baseUrl}/`, async (req, res) => {
   res.status(httpStatus.OK).json({
       message: 'Welcome to the API!',
     }
