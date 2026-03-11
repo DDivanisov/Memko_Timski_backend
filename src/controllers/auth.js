@@ -7,10 +7,12 @@ const passport = require('passport');
 const googleLoginController = async (req, res) => {
 
     const workSpace = await req.user.currentWorkSpace;
-    
+    console.log(workSpace);
     if(!workSpace){
+        console.log("redirect to login failed");
       return res.redirect(`${config.FRONTEND_GOOGLE_CALLBACK_URL}?status=failed_no_workspace`);
     }
+    console.log("redirected to login success");
     return res.redirect(`${config.FRONTEND_ORIGIN}/workspace/${workSpace}`);
 };
 
