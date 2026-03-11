@@ -48,7 +48,9 @@ app.use(
       secure: config.NODE_ENV.toLowerCase() === 'production',
       httpOnly: true,
       sameSite: config.NODE_ENV.toLowerCase() === 'production' ? 'none' : 'lax',
+      domain: undefined
     },
+    name: 'memko.sid'
   })
 );
 
