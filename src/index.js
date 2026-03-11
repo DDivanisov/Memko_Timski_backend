@@ -90,10 +90,7 @@ app.use(errorHandler);
 
 connectDatabase().catch(err => console.error('DB Connection Error:', err));
 
-if (config.NODE_ENV.toLowerCase() !== 'production') {
-  app.listen(config.PORT, async () => {
+
+app.listen(config.PORT, async () => {
   console.log(`Server is running on port ${config.PORT} in ${config.NODE_ENV} mode.`);
 });
-}
-
-module.exports = app;
