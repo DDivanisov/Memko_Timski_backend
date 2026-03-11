@@ -23,16 +23,19 @@ require('./config/passport.config.js');
 
 const app = express();
 
-app.use(
-    cors({
-        origin: config.FRONTEND_ORIGIN,
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        credentials: true,
-    })
-);
+app.use(cors({
+  origin: config.FRONTEND_ORIGIN,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.set('trust proxy', 1);
 
 app.use(
   session({
