@@ -87,7 +87,8 @@ const  deleteTaskController = async (req, res) => {
     const workspaceId = idWorkSpaceSchema.parse(req.params.workspaceId);
 
     const { role } = await isUserMemberService(userId, workspaceId);
-
+    roleGuard(role, 'DELETE_TASK');
+    
     await deleteTaskService(workspaceId, taskId);
 
     return res.status(httpStatus.OK).json({
@@ -115,8 +116,6 @@ const getAllTasksController = async (req, res) => {
       pageNumber: parseInt(req.query.pageNumber) || 1
     }
 
-    const {role} = await isUserMemberService(userId, workspaceId);
-    roleGuard(role, 'DELETE_TASK');
     const results = await getAllTasksService(workspaceId, filters, pagination);
 
     return res.status(httpStatus.OK).json({
