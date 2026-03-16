@@ -141,7 +141,7 @@ const loginService = async (email, password, provider) => {
             throw new AppError("User not found for the given account",httpStatus.BAD_REQUEST);
       }
 
-      const isMatch = user.comparePassword(password);
+      const isMatch = await user.comparePassword(password);
       if(!isMatch){
             throw new AppError("Invalid email or password", httpStatus.UNAUTHORIZED);
       }
